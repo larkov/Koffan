@@ -82,6 +82,7 @@ docker-compose up -d
 | `APP_PASSWORD` | `shopping123` | Login password |
 | `PORT` | `80` (Docker) / `3000` (local) | Server port |
 | `DB_PATH` | `./shopping.db` | Database file path |
+| `DEFAULT_LANG` | `en` | Default UI language (pl, en, de, es, fr, pt) |
 | `LOGIN_MAX_ATTEMPTS` | `5` | Max login attempts before lockout |
 | `LOGIN_WINDOW_MINUTES` | `15` | Time window for counting attempts |
 | `LOGIN_LOCKOUT_MINUTES` | `30` | Lockout duration after exceeding limit |

@@ -22,6 +22,7 @@ func GetSections(c *fiber.Ctx) error {
 		"Stats":        stats,
 		"Translations": i18n.GetAllLocales(),
 		"Locales":      i18n.AvailableLocales(),
+		"DefaultLang":  i18n.GetDefaultLang(),
 	})
 }
 

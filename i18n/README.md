@@ -1,66 +1,66 @@
-# System Tłumaczeń (i18n)
+# Translation System (i18n)
 
-## Dodawanie nowego języka
+## Adding a New Language
 
-### 1. Utwórz plik JSON
+### 1. Create a JSON File
 
-Skopiuj `en.json` jako szablon i utwórz nowy plik, np. `de.json` dla niemieckiego:
+Copy `en.json` as a template and create a new file, e.g., `de.json` for German:
 
 ```bash
 cp i18n/en.json i18n/de.json
 ```
 
-### 2. Edytuj metadane
+### 2. Edit Metadata
 
-Na początku pliku zmień sekcję `meta`:
+At the beginning of the file, modify the `meta` section:
 
 ```json
 {
   "meta": {
-    "code": "de",        // Kod ISO 639-1 (2 litery)
-    "name": "Deutsch",   // Nazwa języka w tym języku
-    "flag": "DE"         // Kod kraju (wyświetlany jako flaga)
+    "code": "de",        // ISO 639-1 code (2 letters)
+    "name": "Deutsch",   // Language name in that language
+    "flag": "DE"         // Country code (displayed as flag)
   },
   ...
 }
 ```
 
-### 3. Przetłumacz wszystkie klucze
+### 3. Translate All Keys
 
-Przetłumacz wartości (NIE klucze!) w każdej sekcji:
+Translate values (NOT keys!) in each section:
 
-- `common` - przyciski: Dodaj, Anuluj, Zapisz, Usuń, Edytuj, Zamknij
-- `nav` - nawigacja: Ustawienia, Wyloguj
-- `list` - lista: tytuł, pusta lista, lista zakupów, gotowe, Kupione
-- `items` - produkty: Co kupić?, Notatka, nazwa, nowy produkt, wybierz sekcję
-- `sections` - sekcje: tytuł, nowa sekcja, lista sekcji, zarządzaj, wybierz, brak sekcji
-- `actions` - akcje: w górę, w dół, przenieś, niepewne, pewne
-- `settings` - ustawienia: tytuł, język
-- `login` - logowanie: tytuł, podtytuł, hasło, placeholder, przycisk, błąd
-- `confirm` - potwierdzenia: usunąć item, usunąć sekcje (z parametrami `{{name}}`, `{{count}}`)
+- `common` - buttons: Add, Cancel, Save, Delete, Edit, Close
+- `nav` - navigation: Settings, Logout
+- `list` - list: title, empty list, shopping list, completed, Bought
+- `items` - products: What to buy?, Note, name, new product, select section
+- `sections` - sections: title, new section, section list, manage, select, no sections
+- `actions` - actions: move up, move down, move, uncertain, certain
+- `settings` - settings: title, language
+- `login` - login: title, subtitle, password, placeholder, button, error
+- `confirm` - confirmations: delete item, delete sections (with `{{name}}`, `{{count}}` parameters)
 
-### 4. Przebuduj aplikację
+### 4. Rebuild the Application
 
-Pliki JSON są embedowane w binarkę, więc po dodaniu/zmianie tłumaczeń:
+JSON files are embedded in the binary, so after adding/changing translations:
 
 ```bash
 go build -o shopping-list-go
 ./shopping-list-go
 ```
 
-### 5. Gotowe!
+### 5. Done!
 
-Nowy język automatycznie pojawi się w selektorze w Ustawieniach.
+The new language will automatically appear in the Settings language selector.
 
 ---
 
-## Struktura pliku tłumaczeń
+## Translation File Structure
 
 ```json
 {
   "meta": {
     "code": "xx",
-    "name": "Nazwa języka",
+    "name": "Language name",
     "flag": "XX"
   },
   "common": {
@@ -130,10 +130,10 @@ Nowy język automatycznie pojawi się w selektorze w Ustawieniach.
 }
 ```
 
-## Kody języków (ISO 639-1)
+## Language Codes (ISO 639-1)
 
-| Kod | Język |
-|-----|-------|
+| Code | Language |
+|------|----------|
 | pl | Polski |
 | en | English |
 | de | Deutsch |
@@ -154,20 +154,20 @@ Nowy język automatycznie pojawi się w selektorze w Ustawieniach.
 | ko | 한국어 |
 | zh | 中文 |
 
-## Parametry w tłumaczeniach
+## Parameters in Translations
 
-Niektóre teksty zawierają parametry w formacie `{{param}}`:
+Some texts contain parameters in `{{param}}` format:
 
-- `{{name}}` - nazwa elementu (item, sekcja)
-- `{{count}}` - liczba elementów
+- `{{name}}` - element name (item, section)
+- `{{count}}` - number of elements
 
-Przykład:
+Example:
 ```json
 "delete_item": "Delete \"{{name}}\"?"
 ```
 
-W kodzie JS wywoływane jako:
+In JS code called as:
 ```javascript
-t('confirm.delete_item', { name: 'Mleko' })
-// Wynik: Delete "Mleko"?
+t('confirm.delete_item', { name: 'Milk' })
+// Result: Delete "Milk"?
 ```

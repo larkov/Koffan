@@ -44,6 +44,7 @@ func LoginPage(c *fiber.Ctx) error {
 		"Error":        c.Query("error"),
 		"Translations": i18n.GetAllLocales(),
 		"Locales":      i18n.AvailableLocales(),
+		"DefaultLang":  i18n.GetDefaultLang(),
 	}, "")
 }
 

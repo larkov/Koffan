@@ -27,8 +27,23 @@ type Locale struct {
 var (
 	locales     = make(map[string]*Locale)
 	localesMu   sync.RWMutex
-	defaultLang = "pl"
+	defaultLang = "en"
 )
+
+// SetDefaultLang sets the default language (must be called after Init)
+func SetDefaultLang(lang string) {
+	localesMu.RLock()
+	_, exists := locales[lang]
+	localesMu.RUnlock()
+	if exists {
+		defaultLang = lang
+	}
+}
+
+// GetDefaultLang returns the current default language
+func GetDefaultLang() string {
+	return defaultLang
+}
 
 // Init loads all available translations
 func Init() error {

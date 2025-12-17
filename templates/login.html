@@ -12,7 +12,8 @@
     <script>
         window.translations = {{.Translations | toJSON}};
         window.locales = {{.Locales | toJSON}};
-        window.currentLang = localStorage.getItem('language') || 'pl';
+        window.defaultLang = {{.DefaultLang | toJSON}};
+        window.currentLang = localStorage.getItem('language') || window.defaultLang;
 
         // Translation helper function
         function t(key, params) {

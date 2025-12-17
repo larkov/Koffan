@@ -29,6 +29,11 @@ func main() {
 		log.Fatal("Failed to initialize i18n:", err)
 	}
 
+	// Set default language from env var (if specified)
+	if lang := os.Getenv("DEFAULT_LANG"); lang != "" {
+		i18n.SetDefaultLang(lang)
+	}
+
 	// Initialize login rate limiter
 	handlers.InitLoginRateLimiter()
 

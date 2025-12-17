@@ -17,23 +17,15 @@
     <script>
         window.translations = {{.Translations | toJSON}};
         window.locales = {{.Locales | toJSON}};
+        window.defaultLang = {{.DefaultLang | toJSON}};
 
-        // Detect language: localStorage > browser > fallback 'pl'
+        // Language: localStorage > server default
         (function() {
             const stored = localStorage.getItem('language');
             if (stored && window.translations[stored]) {
                 window.currentLang = stored;
-                return;
-            }
-
-            // Detect browser language (e.g., "pl-PL" -> "pl")
-            const browserLang = (navigator.language || navigator.userLanguage || 'pl').split('-')[0].toLowerCase();
-
-            // Check if browser language is available
-            if (window.translations[browserLang]) {
-                window.currentLang = browserLang;
             } else {
-                window.currentLang = 'pl';
+                window.currentLang = window.defaultLang;
             }
         })();
 

@@ -107,8 +107,14 @@ func DeleteSection(id int64) error {
 }
 
 func MoveSectionUp(id int64) error {
+	tx, err := DB.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
 	var currentOrder int
-	err := DB.QueryRow("SELECT sort_order FROM sections WHERE id = ?", id).Scan(&currentOrder)
+	err = tx.QueryRow("SELECT sort_order FROM sections WHERE id = ?", id).Scan(&currentOrder)
 	if err != nil {
 		return err
 	}
@@ -116,12 +122,6 @@ func MoveSectionUp(id int64) error {
 	if currentOrder == 0 {
 		return nil // Already at top
 	}
-
-	tx, err := DB.Begin()
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback()
 
 	// Swap with previous section
 	_, err = tx.Exec(`
@@ -143,22 +143,25 @@ func MoveSectionUp(id int64) error {
 }
 
 func MoveSectionDown(id int64) error {
-	var currentOrder, maxOrder int
-	err := DB.QueryRow("SELECT sort_order FROM sections WHERE id = ?", id).Scan(&currentOrder)
-	if err != nil {
-		return err
-	}
-	DB.QueryRow("SELECT MAX(sort_order) FROM sections").Scan(&maxOrder)
-
-	if currentOrder >= maxOrder {
-		return nil // Already at bottom
-	}
-
 	tx, err := DB.Begin()
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
+
+	var currentOrder, maxOrder int
+	err = tx.QueryRow("SELECT sort_order FROM sections WHERE id = ?", id).Scan(&currentOrder)
+	if err != nil {
+		return err
+	}
+	err = tx.QueryRow("SELECT MAX(sort_order) FROM sections").Scan(&maxOrder)
+	if err != nil {
+		return err
+	}
+
+	if currentOrder >= maxOrder {
+		return nil // Already at bottom
+	}
 
 	// Swap with next section
 	_, err = tx.Exec(`
@@ -279,33 +282,35 @@ func MoveItemToSection(id, newSectionID int64) (*Item, error) {
 }
 
 func MoveItemUp(id int64) error {
-	item, err := GetItemByID(id)
-	if err != nil {
-		return err
-	}
-
-	if item.SortOrder == 0 {
-		return nil // Already at top
-	}
-
 	tx, err := DB.Begin()
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
 
+	var sectionID int64
+	var sortOrder int
+	err = tx.QueryRow("SELECT section_id, sort_order FROM items WHERE id = ?", id).Scan(&sectionID, &sortOrder)
+	if err != nil {
+		return err
+	}
+
+	if sortOrder == 0 {
+		return nil // Already at top
+	}
+
 	// Swap with previous item in same section
 	_, err = tx.Exec(`
 		UPDATE items SET sort_order = sort_order + 1
 		WHERE section_id = ? AND sort_order = ?
-	`, item.SectionID, item.SortOrder-1)
+	`, sectionID, sortOrder-1)
 	if err != nil {
 		return err
 	}
 
 	_, err = tx.Exec(`
 		UPDATE items SET sort_order = ? WHERE id = ?
-	`, item.SortOrder-1, id)
+	`, sortOrder-1, id)
 	if err != nil {
 		return err
 	}
@@ -314,36 +319,41 @@ func MoveItemUp(id int64) error {
 }
 
 func MoveItemDown(id int64) error {
-	item, err := GetItemByID(id)
-	if err != nil {
-		return err
-	}
-
-	var maxOrder int
-	DB.QueryRow("SELECT MAX(sort_order) FROM items WHERE section_id = ?", item.SectionID).Scan(&maxOrder)
-
-	if item.SortOrder >= maxOrder {
-		return nil // Already at bottom
-	}
-
 	tx, err := DB.Begin()
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
 
+	var sectionID int64
+	var sortOrder int
+	err = tx.QueryRow("SELECT section_id, sort_order FROM items WHERE id = ?", id).Scan(&sectionID, &sortOrder)
+	if err != nil {
+		return err
+	}
+
+	var maxOrder int
+	err = tx.QueryRow("SELECT MAX(sort_order) FROM items WHERE section_id = ?", sectionID).Scan(&maxOrder)
+	if err != nil {
+		return err
+	}
+
+	if sortOrder >= maxOrder {
+		return nil // Already at bottom
+	}
+
 	// Swap with next item in same section
 	_, err = tx.Exec(`
 		UPDATE items SET sort_order = sort_order - 1
 		WHERE section_id = ? AND sort_order = ?
-	`, item.SectionID, item.SortOrder+1)
+	`, sectionID, sortOrder+1)
 	if err != nil {
 		return err
 	}
 
 	_, err = tx.Exec(`
 		UPDATE items SET sort_order = ? WHERE id = ?
-	`, item.SortOrder+1, id)
+	`, sortOrder+1, id)
 	if err != nil {
 		return err
 	}

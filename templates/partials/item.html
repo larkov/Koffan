@@ -121,7 +121,18 @@
 
     <!-- Mobile Actions Button -->
     <button
-        @click="$dispatch('open-mobile-action', {id: {{.Item.ID}}, name: '{{.Item.Name}}', description: '{{.Item.Description}}', section_id: {{.Item.SectionID}}, uncertain: {{.Item.Uncertain}}})"
+        data-item-id="{{.Item.ID}}"
+        data-item-name="{{.Item.Name}}"
+        data-item-description="{{.Item.Description}}"
+        data-section-id="{{.Item.SectionID}}"
+        data-uncertain="{{.Item.Uncertain}}"
+        @click="$dispatch('open-mobile-action', {
+            id: parseInt($el.dataset.itemId),
+            name: $el.dataset.itemName,
+            description: $el.dataset.itemDescription,
+            section_id: parseInt($el.dataset.sectionId),
+            uncertain: $el.dataset.uncertain === 'true'
+        })"
         class="md:hidden p-2 rounded-lg text-stone-400 hover:bg-stone-100"
     >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

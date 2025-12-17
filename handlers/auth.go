@@ -3,6 +3,7 @@ package handlers
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"log"
 	"os"
 	"shopping-list/db"
 	"shopping-list/i18n"
@@ -26,7 +27,9 @@ func getAppPassword() string {
 
 func generateSessionID() string {
 	bytes := make([]byte, 32)
-	rand.Read(bytes)
+	if _, err := rand.Read(bytes); err != nil {
+		log.Fatal("Failed to generate secure random bytes:", err)
+	}
 	return hex.EncodeToString(bytes)
 }
 

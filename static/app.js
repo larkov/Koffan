@@ -482,27 +482,18 @@ function shoppingList() {
             const selects = document.querySelectorAll('select[name="section_id"]');
             selects.forEach(select => {
                 const currentValue = select.value;
-                // Zachowaj pierwszą opcję (placeholder)
-                const placeholder = select.querySelector('option[value=""]');
 
                 // Wyczyść wszystkie opcje
                 select.innerHTML = '';
 
-                // Dodaj placeholder
-                if (placeholder) {
-                    select.appendChild(placeholder);
-                } else {
-                    const opt = document.createElement('option');
-                    opt.value = '';
-                    opt.textContent = t('items.section');
-                    select.appendChild(opt);
-                }
-
-                // Dodaj nowe opcje
-                sections.forEach(section => {
+                // Dodaj nowe opcje (pierwsza będzie domyślnie wybrana)
+                sections.forEach((section, index) => {
                     const opt = document.createElement('option');
                     opt.value = section.id;
                     opt.textContent = section.name;
+                    if (index === 0) {
+                        opt.selected = true;
+                    }
                     select.appendChild(opt);
                 });
 

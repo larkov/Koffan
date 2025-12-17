@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Lista Zakupow</title>
 
     <!-- Favicon & PWA -->
@@ -172,6 +172,16 @@
         /* Disable animations during move */
         .moving-item {
             animation: none !important;
+        }
+
+        /* Prevent zoom on touch devices */
+        * {
+            touch-action: manipulation;
+        }
+
+        /* Prevent iOS zoom on input focus (requires 16px minimum) */
+        input, textarea, select {
+            font-size: 16px !important;
         }
     </style>
 </head>

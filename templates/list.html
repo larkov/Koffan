@@ -78,9 +78,8 @@
                 >
                     <select name="section_id" required
                         class="w-40 border border-stone-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent bg-stone-50 text-stone-700">
-                        <option value="" x-text="t('items.section')"></option>
-                        {{range .Sections}}
-                        <option value="{{.ID}}">{{.Name}}</option>
+                        {{range $index, $section := .Sections}}
+                        <option value="{{$section.ID}}" {{if eq $index 0}}selected{{end}}>{{$section.Name}}</option>
                         {{end}}
                     </select>
                     <input type="text" name="name" id="item-name-input" :placeholder="t('items.what_to_buy')" required
@@ -159,9 +158,8 @@
             >
                 <select name="section_id" required
                     class="w-full border border-stone-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 bg-stone-50">
-                    <option value="" x-text="t('items.select_section')"></option>
-                    {{range .Sections}}
-                    <option value="{{.ID}}">{{.Name}}</option>
+                    {{range $index, $section := .Sections}}
+                    <option value="{{$section.ID}}" {{if eq $index 0}}selected{{end}}>{{$section.Name}}</option>
                     {{end}}
                 </select>
                 <input type="text" name="name" :placeholder="t('items.what_to_buy')" required

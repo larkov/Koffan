@@ -161,6 +161,11 @@ func main() {
 	app.Get("/api/item/:id/version", handlers.GetItemVersion)
 	app.Get("/api/suggestions", handlers.GetSuggestions)
 
+	// History management API
+	app.Get("/api/history", handlers.GetHistory)
+	app.Delete("/api/history/:id", handlers.DeleteHistoryItem)
+	app.Post("/api/history/batch-delete", handlers.BatchDeleteHistory)
+
 	// Batch operations
 	app.Post("/sections/batch-delete", handlers.BatchDeleteSections)
 

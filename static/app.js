@@ -75,6 +75,12 @@ function shoppingList() {
         selectMode: false,
         selectedSections: [],
 
+        // History management
+        showHistoryModal: false,
+        historyItems: [],
+        historySearch: '',
+        selectedHistoryIds: [],
+
         // Stats (updated from server)
         stats: {
             total: window.initialStats?.total || 0,
@@ -884,6 +890,94 @@ function shoppingList() {
             } catch (error) {
                 console.error('[App] Failed to delete completed items:', error);
                 window.Toast.show('Error deleting items', 'warning');
+            }
+        },
+
+        // History management methods
+        async fetchHistory() {
+            if (!this.isOnline) return;
+
+            try {
+                const response = await fetch('/api/history');
+                if (response.ok) {
+                    this.historyItems = await response.json();
+                }
+            } catch (error) {
+                console.error('[App] Failed to fetch history:', error);
+            }
+        },
+
+        get filteredHistoryItems() {
+            if (!this.historySearch) return this.historyItems;
+            const search = this.historySearch.toLowerCase();
+            return this.historyItems.filter(item =>
+                item.name.toLowerCase().includes(search)
+            );
+        },
+
+        toggleHistoryItem(id) {
+            const index = this.selectedHistoryIds.indexOf(id);
+            if (index === -1) {
+                this.selectedHistoryIds.push(id);
+            } else {
+                this.selectedHistoryIds.splice(index, 1);
+            }
+        },
+
+        async deleteHistoryItem(item) {
+            if (!this.isOnline) {
+                window.Toast.show(t('offline.action_blocked'), 'warning');
+                return;
+            }
+
+            const confirmed = confirm(t('history.confirm_delete', { name: item.name }));
+            if (!confirmed) return;
+
+            try {
+                const response = await fetch(`/api/history/${item.id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    this.historyItems = this.historyItems.filter(h => h.id !== item.id);
+                    this.selectedHistoryIds = this.selectedHistoryIds.filter(id => id !== item.id);
+                    // Refresh suggestions cache
+                    this.cacheSuggestions();
+                }
+            } catch (error) {
+                console.error('[App] Failed to delete history item:', error);
+                window.Toast.show('Error', 'warning');
+            }
+        },
+
+        async deleteSelectedHistory() {
+            if (!this.isOnline) {
+                window.Toast.show(t('offline.action_blocked'), 'warning');
+                return;
+            }
+
+            if (this.selectedHistoryIds.length === 0) return;
+
+            const confirmed = confirm(t('history.confirm_delete_batch', { count: this.selectedHistoryIds.length }));
+            if (!confirmed) return;
+
+            try {
+                const response = await fetch('/api/history/batch-delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `ids=${this.selectedHistoryIds.join(',')}`
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    this.historyItems = this.historyItems.filter(
+                        h => !this.selectedHistoryIds.includes(h.id)
+                    );
+                    this.selectedHistoryIds = [];
+                    // Refresh suggestions cache
+                    this.cacheSuggestions();
+                    window.Toast.show(t('history.deleted', { count: result.deleted }), 'success');
+                }
+            } catch (error) {
+                console.error('[App] Failed to delete history items:', error);
+                window.Toast.show('Error', 'warning');
             }
         },
 

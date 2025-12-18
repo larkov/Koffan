@@ -90,5 +90,16 @@
     "can_toggle": "Marcar y desmarcar",
     "can_edit": "Editar productos",
     "can_uncertain": "Marcar como incierto"
+  },
+  "history": {
+    "title": "Historial de productos",
+    "description": "Productos usados para auto-sugerencias. Elimina los agregados por error o los que ya no necesitas.",
+    "manage": "Gestionar historial",
+    "search_placeholder": "Buscar en el historial...",
+    "empty": "No hay productos guardados",
+    "delete_selected": "Eliminar seleccionados",
+    "confirm_delete": "¿Eliminar \"{{name}}\" del historial?",
+    "confirm_delete_batch": "¿Eliminar {{count}} productos seleccionados del historial?",
+    "deleted": "{{count}} productos eliminados"
   }
 }

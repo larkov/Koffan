@@ -91,5 +91,16 @@
     "can_edit": "Edit products",
     "can_uncertain": "Mark as uncertain",
     "back_online": "You're back online. Everything synced!"
+  },
+  "history": {
+    "title": "Product history",
+    "description": "Products used for auto-suggestions. Remove items added by mistake or ones you no longer need.",
+    "manage": "Manage history",
+    "search_placeholder": "Search history...",
+    "empty": "No saved products",
+    "delete_selected": "Delete selected",
+    "confirm_delete": "Delete \"{{name}}\" from history?",
+    "confirm_delete_batch": "Delete {{count}} selected products from history?",
+    "deleted": "Deleted {{count}} products"
   }
 }

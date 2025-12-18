@@ -90,5 +90,16 @@
     "can_toggle": "Cocher et décocher",
     "can_edit": "Modifier des produits",
     "can_uncertain": "Marquer comme incertain"
+  },
+  "history": {
+    "title": "Historique des produits",
+    "description": "Produits utilisés pour les suggestions automatiques. Supprimez ceux ajoutés par erreur ou dont vous n'avez plus besoin.",
+    "manage": "Gérer l'historique",
+    "search_placeholder": "Rechercher dans l'historique...",
+    "empty": "Aucun produit enregistré",
+    "delete_selected": "Supprimer la sélection",
+    "confirm_delete": "Supprimer \"{{name}}\" de l'historique ?",
+    "confirm_delete_batch": "Supprimer {{count}} produits sélectionnés de l'historique ?",
+    "deleted": "{{count}} produits supprimés"
   }
 }

@@ -90,5 +90,16 @@
     "can_toggle": "Abhaken und Häkchen entfernen",
     "can_edit": "Produkte bearbeiten",
     "can_uncertain": "Als unsicher markieren"
+  },
+  "history": {
+    "title": "Produktverlauf",
+    "description": "Produkte für Auto-Vorschläge. Entfernen Sie versehentlich hinzugefügte oder nicht mehr benötigte Artikel.",
+    "manage": "Verlauf verwalten",
+    "search_placeholder": "Im Verlauf suchen...",
+    "empty": "Keine gespeicherten Produkte",
+    "delete_selected": "Ausgewählte löschen",
+    "confirm_delete": "\"{{name}}\" aus dem Verlauf löschen?",
+    "confirm_delete_batch": "{{count}} ausgewählte Produkte aus dem Verlauf löschen?",
+    "deleted": "{{count}} Produkte gelöscht"
   }
 }

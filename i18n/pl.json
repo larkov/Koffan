@@ -91,5 +91,16 @@
     "can_edit": "Edycja produktów",
     "can_uncertain": "Oznaczanie jako niepewne",
     "back_online": "Wróciłeś online. Wszystko zsynchronizowane!"
+  },
+  "history": {
+    "title": "Historia produktów",
+    "description": "Lista produktów używanych w podpowiedziach. Usuń produkty dodane przypadkowo lub te, których już nie potrzebujesz.",
+    "manage": "Zarządzaj historią",
+    "search_placeholder": "Szukaj w historii...",
+    "empty": "Brak zapisanych produktów",
+    "delete_selected": "Usuń zaznaczone",
+    "confirm_delete": "Usunąć \"{{name}}\" z historii?",
+    "confirm_delete_batch": "Usunąć {{count}} zaznaczonych produktów z historii?",
+    "deleted": "Usunięto {{count}} produktów"
   }
 }

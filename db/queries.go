@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 	"time"
@@ -640,4 +641,73 @@ func GetAllItemSuggestions(limit int) ([]ItemSuggestion, error) {
 		suggestions = append(suggestions, s)
 	}
 	return suggestions, nil
+}
+
+// HistoryItem represents an item from history with ID for management
+type HistoryItem struct {
+	ID              int64  `json:"id"`
+	Name            string `json:"name"`
+	LastSectionID   int64  `json:"last_section_id"`
+	LastSectionName string `json:"last_section_name"`
+	UsageCount      int    `json:"usage_count"`
+}
+
+// GetItemHistoryList returns all history items for management UI
+func GetItemHistoryList() ([]HistoryItem, error) {
+	rows, err := DB.Query(`
+		SELECT h.id, h.name, COALESCE(h.last_section_id, 0), COALESCE(s.name, ''), h.usage_count
+		FROM item_history h
+		LEFT JOIN sections s ON h.last_section_id = s.id
+		ORDER BY h.usage_count DESC, h.last_used_at DESC
+		LIMIT 100
+	`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var items []HistoryItem
+	for rows.Next() {
+		var h HistoryItem
+		if err := rows.Scan(&h.ID, &h.Name, &h.LastSectionID, &h.LastSectionName, &h.UsageCount); err != nil {
+			return nil, err
+		}
+		items = append(items, h)
+	}
+	return items, nil
+}
+
+// DeleteItemHistory deletes a single item from history
+func DeleteItemHistory(id int64) error {
+	result, err := DB.Exec("DELETE FROM item_history WHERE id = ?", id)
+	if err != nil {
+		return err
+	}
+	rows, _ := result.RowsAffected()
+	if rows == 0 {
+		return fmt.Errorf("history item not found")
+	}
+	return nil
+}
+
+// DeleteItemHistoryBatch deletes multiple items from history
+func DeleteItemHistoryBatch(ids []int64) (int64, error) {
+	if len(ids) == 0 {
+		return 0, nil
+	}
+
+	// Build placeholders
+	placeholders := make([]string, len(ids))
+	args := make([]interface{}, len(ids))
+	for i, id := range ids {
+		placeholders[i] = "?"
+		args[i] = id
+	}
+
+	query := fmt.Sprintf("DELETE FROM item_history WHERE id IN (%s)", strings.Join(placeholders, ","))
+	result, err := DB.Exec(query, args...)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
 }

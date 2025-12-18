@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"database/sql"
+	"log"
 	"shopping-list/db"
 	"strconv"
 
@@ -237,7 +239,11 @@ func GetItemVersion(c *fiber.Ctx) error {
 
 	item, err := db.GetItemByID(id)
 	if err != nil {
-		return c.Status(404).JSON(fiber.Map{"error": "Item not found"})
+		if err == sql.ErrNoRows {
+			return c.Status(404).JSON(fiber.Map{"error": "Item not found"})
+		}
+		log.Printf("GetItemVersion database error for item %d: %v", id, err)
+		return c.Status(500).JSON(fiber.Map{"error": "Database error"})
 	}
 
 	return c.JSON(fiber.Map{

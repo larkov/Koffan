@@ -829,8 +829,21 @@ function shoppingList() {
         // Edit Item
         editItem(item) {
             this.editingItem = item;
-            this.editItemName = item.name;
-            this.editItemDescription = item.description || '';
+
+            // Check for offline-edited data in DOM attributes
+            const itemEl = document.getElementById(`item-${item.id}`);
+            if (itemEl) {
+                const offlineName = itemEl.getAttribute('data-offline-name');
+                const offlineDesc = itemEl.getAttribute('data-offline-description');
+
+                // Use offline data if exists, otherwise use original
+                this.editItemName = offlineName !== null ? offlineName : item.name;
+                this.editItemDescription = offlineDesc !== null ? offlineDesc : (item.description || '');
+            } else {
+                this.editItemName = item.name;
+                this.editItemDescription = item.description || '';
+            }
+
             this.$nextTick(() => {
                 const input = document.querySelector('[x-model="editItemName"]');
                 if (input) input.focus();
@@ -877,6 +890,10 @@ function shoppingList() {
                             nameEl.parentNode.insertBefore(newDescEl, nameEl.nextSibling);
                         }
                     }
+
+                    // Store offline-edited data in DOM attributes for later edit
+                    itemEl.setAttribute('data-offline-name', name);
+                    itemEl.setAttribute('data-offline-description', description);
 
                     // Add sync indicator if not already present
                     if (!itemEl.classList.contains('pending-sync')) {

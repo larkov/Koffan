@@ -91,7 +91,10 @@ func runMigrations() {
 			log.Println("Migration failed for sections:", err)
 		} else {
 			// Set updated_at for existing rows
-			DB.Exec("UPDATE sections SET updated_at = strftime('%s', 'now')")
+			_, updateErr := DB.Exec("UPDATE sections SET updated_at = strftime('%s', 'now')")
+			if updateErr != nil {
+				log.Printf("WARNING: Migration UPDATE failed for sections: %v", updateErr)
+			}
 			log.Println("Migration completed: sections.updated_at added")
 		}
 	}
@@ -111,7 +114,10 @@ func runMigrations() {
 			log.Println("Migration failed for items:", err)
 		} else {
 			// Set updated_at for existing rows
-			DB.Exec("UPDATE items SET updated_at = strftime('%s', 'now')")
+			_, updateErr := DB.Exec("UPDATE items SET updated_at = strftime('%s', 'now')")
+			if updateErr != nil {
+				log.Printf("WARNING: Migration UPDATE failed for items: %v", updateErr)
+			}
 			log.Println("Migration completed: items.updated_at added")
 		}
 	}

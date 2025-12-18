@@ -83,6 +83,7 @@
     "can_add": "Dodawanie produktów",
     "can_toggle": "Zaznaczanie i odznaczanie",
     "can_edit": "Edycja produktów",
-    "can_uncertain": "Oznaczanie jako niepewne"
+    "can_uncertain": "Oznaczanie jako niepewne",
+    "back_online": "Wróciłeś online. Wszystko zsynchronizowane!"
   }
 }

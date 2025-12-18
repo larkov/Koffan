@@ -207,10 +207,16 @@ function shoppingList() {
             }
 
             // Online/offline event listeners
-            window.addEventListener('online', () => {
+            window.addEventListener('online', async () => {
                 console.log('[App] Back online');
                 this.isOnline = true;
-                this.fullRefresh();
+
+                // Sync offline actions, show toast, then reload page
+                await this.processOfflineQueue();
+                window.Toast.show(t('offline.back_online'), 'success', 2000);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
             });
 
             window.addEventListener('offline', () => {

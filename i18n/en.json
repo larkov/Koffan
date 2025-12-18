@@ -83,6 +83,7 @@
     "can_add": "Add products",
     "can_toggle": "Check and uncheck items",
     "can_edit": "Edit products",
-    "can_uncertain": "Mark as uncertain"
+    "can_uncertain": "Mark as uncertain",
+    "back_online": "You're back online. Everything synced!"
   }
 }
